@@ -11,6 +11,7 @@ import java.io.IOException;
  * @author Shuvradeb
  */
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/api/v1")
 public class TinyUrlController {
 
