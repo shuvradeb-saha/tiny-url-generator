@@ -1,1 +1,4 @@
 rootProject.name = 'tiny-url-generator'
+
+include "server"
+include "client"

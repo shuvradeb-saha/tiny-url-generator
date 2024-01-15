@@ -21,10 +21,6 @@ repositories {
     mavenCentral()
 }
 
-jar {
-    enabled = false
-}
-
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
@@ -33,6 +29,17 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
+
+task copyReactApp(type: Copy, dependsOn: ':client:assemble') {
+    from project(':client').buildDir
+    into "${sourceSets.main.output.resourcesDir}/static"
+}
+
+jar {
+    enabled = false
+}
+
+processResources.dependsOn copyReactApp
 
 tasks.named('test') {
     useJUnitPlatform()

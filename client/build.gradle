@@ -1,0 +1,47 @@
+plugins {
+    id 'base'
+    id 'eclipse'
+    id 'com.github.node-gradle.node' version '7.0.1'
+}
+
+eclipse.project.name = "${rootProject.name}-${project.name}"
+
+// configure gradle-node-plugin
+node {
+    version = '16.14.2'
+    yarnVersion = '1.22.18'
+    download = true
+}
+
+def node_modules_dir = "node_modules"
+
+repositories {
+    mavenCentral()
+}
+
+task populate_node_modules(type: YarnTask) {
+    inputs.file(new File('package.json'))
+    inputs.file(new File('yarn.lock'))
+
+    outputs.dir(new File(node_modules_dir))
+
+    args = ['install']
+}
+
+task bundle(type: YarnTask) {
+    inputs.dir(new File('public'))
+    inputs.dir(new File('src'))
+    inputs.dir(new File(node_modules_dir))
+
+    outputs.dir(project.buildDir)
+
+    args = ['build']
+}
+
+bundle.dependsOn(populate_node_modules)
+assemble.dependsOn(bundle)
+
+clean {
+    delete node_modules_dir
+    delete project.buildDir
+}
